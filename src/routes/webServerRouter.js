@@ -1,13 +1,23 @@
 import { Router } from "express";
 import { isAuthWeb } from "../middlewares/auth.js";
-import * as controller from "../controllers/webServerController.js";
+import WebServerController from "../controllers/webServerController.js";
 
 const router = Router();
 
-router.get("/", isAuthWeb, controller.getHome);
+class WebServerRouter {
+  constructor() {
+    this.webServerController = new WebServerController();
+  }
 
-router.get("/info", controller.showAppInfo);
+  start() {
+    router.get("/", isAuthWeb, this.webServerController.getHome);
 
-router.get("/productos-mock", controller.getProductosMock);
+    router.get("/info", this.webServerController.showAppInfo);
 
-export default router;
+    router.get("/productos-mock", this.webServerController.getProductosMock);
+
+    return router;
+  }
+}
+
+export default new WebServerRouter();

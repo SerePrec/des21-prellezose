@@ -6,10 +6,7 @@ import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 import { passport } from "./middlewares/passport.js";
 import { isAuthApi } from "./middlewares/auth.js";
-import {
-  getError404Api,
-  getError404Web
-} from "./controllers/error404Controller.js";
+import Error404Controller from "./controllers/error404Controller.js";
 import config from "./config.js";
 import authRouter from "./routes/authRouter.js";
 import webServerRouter from "./routes/webServerRouter.js";
@@ -19,6 +16,7 @@ import apiRandomsRouter from "./routes/apiRandomsRouter.js";
 import { logger } from "./logger/index.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+const error404Controller = new Error404Controller();
 
 const app = express();
 
@@ -55,16 +53,16 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // routers
-app.use(authRouter);
-app.use(webServerRouter);
-app.use("/api", apiTestsRouter);
-app.use("/api/randoms", apiRandomsRouter);
-app.use("/api/productos", isAuthApi, apiProductosRouter);
+app.use(authRouter.start());
+app.use(webServerRouter.start());
+app.use("/api", apiTestsRouter.start());
+app.use("/api/randoms", apiRandomsRouter.start());
+app.use("/api/productos", isAuthApi, apiProductosRouter.start());
 
 // error 404 API
-app.use("/api", getError404Api);
+app.use("/api", error404Controller.getError404Api);
 
 // error 404 WEB
-app.use(getError404Web);
+app.use(error404Controller.getError404Web);
 
 export default app;

@@ -1,4 +1,6 @@
-import * as validateDataService from "../services/validateDataService.js";
+import ValidateDataService from "../services/validateDataService.js";
+
+const validateDataService = new ValidateDataService();
 
 // Valida que sea un formato de usuario válido para guardar en la BD
 const validateRegisterPost = (req, res, next) => {

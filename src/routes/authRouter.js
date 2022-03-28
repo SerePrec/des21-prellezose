@@ -4,22 +4,32 @@ import {
   passportAuthLogin,
   passportAuthRegister
 } from "../middlewares/passport.js";
-import * as controller from "../controllers/authController.js";
+import AuthController from "../controllers/authController.js";
 
 const router = Router();
 
-router.get("/login", controller.getLogin);
+class AuthRouter {
+  constructor() {
+    this.authController = new AuthController();
+  }
 
-router.post("/login", passportAuthLogin);
+  start() {
+    router.get("/login", this.authController.getLogin);
 
-router.get("/login-error", controller.getLoginError);
+    router.post("/login", passportAuthLogin);
 
-router.get("/register", controller.getRegister);
+    router.get("/login-error", this.authController.getLoginError);
 
-router.post("/register", validateRegisterPost, passportAuthRegister);
+    router.get("/register", this.authController.getRegister);
 
-router.get("/register-error", controller.getRegisterError);
+    router.post("/register", validateRegisterPost, passportAuthRegister);
 
-router.get("/logout", controller.getLogout);
+    router.get("/register-error", this.authController.getRegisterError);
 
-export default router;
+    router.get("/logout", this.authController.getLogout);
+
+    return router;
+  }
+}
+
+export default new AuthRouter();

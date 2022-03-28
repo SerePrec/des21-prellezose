@@ -1,8 +1,17 @@
 import { Router } from "express";
-import * as controller from "../controllers/apiTestsController.js";
+import ApiTestsController from "../controllers/apiTestsController.js";
 
 const router = Router();
 
-router.get("/productos-test", controller.getProductosTest);
+class ApiTestsRouter {
+  constructor() {
+    this.apiTestsController = new ApiTestsController();
+  }
 
-export default router;
+  start() {
+    router.get("/productos-test", this.apiTestsController.getProductosTest);
+    return router;
+  }
+}
+
+export default new ApiTestsRouter();

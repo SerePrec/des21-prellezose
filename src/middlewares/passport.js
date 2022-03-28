@@ -1,6 +1,8 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
-import * as authUserService from "../services/authUserService.js";
+import AuthUserService from "../services/authUserService.js";
+
+const authUserService = new AuthUserService();
 
 passport.use(
   "register",

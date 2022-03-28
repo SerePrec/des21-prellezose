@@ -3,18 +3,26 @@ import { Message } from "../model/entities/Message.js";
 import { MessageDTO } from "../model/DTOs/MessageDTO.js";
 import { escapeHtml, normalizeMessages } from "../utils/messageTools.js";
 
-const messagesModel = new MessagesRepository();
+class MessagesService {
+  constructor() {
+    this.messagesModel = new MessagesRepository();
+  }
 
-export const getAllMessages = async () => {
-  const messageEntities = await messagesModel.getAll();
-  const messages = messageEntities.map(message => new MessageDTO(message));
-  const normalizedMessages = normalizeMessages(messages);
-  return normalizedMessages;
-};
+  getAllMessages = async () => {
+    const messageEntities = await this.messagesModel.getAll();
+    const messages = messageEntities.map(message => new MessageDTO(message));
+    const normalizedMessages = normalizeMessages(messages);
+    return normalizedMessages;
+  };
 
-export const createMessage = async message => {
-  message.text = escapeHtml(message.text);
-  const newMessageEntitie = new Message(message);
-  const createdMessageEntitie = await messagesModel.save(newMessageEntitie);
-  return new MessageDTO(createdMessageEntitie);
-};
+  createMessage = async message => {
+    message.text = escapeHtml(message.text);
+    const newMessageEntitie = new Message(message);
+    const createdMessageEntitie = await this.messagesModel.save(
+      newMessageEntitie
+    );
+    return new MessageDTO(createdMessageEntitie);
+  };
+}
+
+export default MessagesService;

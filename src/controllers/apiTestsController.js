@@ -1,5 +1,13 @@
-import * as testsService from "../services/testsService.js";
+import TestsService from "../services/testsService.js";
 
-export const getProductosTest = (req, res) => {
-  res.json(testsService.generateNMockProduct(5));
-};
+class ApiTestsController {
+  constructor() {
+    this.testsService = new TestsService();
+  }
+
+  getProductosTest = (req, res) => {
+    res.json(this.testsService.generateNMockProduct(5));
+  };
+}
+
+export default ApiTestsController;

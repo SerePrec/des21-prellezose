@@ -1,4 +1,6 @@
-import * as validateDataService from "../services/validateDataService.js";
+import ValidateDataService from "../services/validateDataService.js";
+
+const validateDataService = new ValidateDataService();
 
 const validateId = (req, res, next) => {
   const id = req.params.id;

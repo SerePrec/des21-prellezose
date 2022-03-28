@@ -1,7 +1,11 @@
-import * as productsService from "./services/productosService.js";
-import * as messagesService from "./services/messagesService.js";
-import * as validateDataService from "./services/validateDataService.js";
+import ProductsService from "./services/productosService.js";
+import MessagesService from "./services/messagesService.js";
+import ValidateDataService from "./services/validateDataService.js";
 import { logger } from "./logger/index.js";
+
+const productsService = new ProductsService();
+const messagesService = new MessagesService();
+const validateDataService = new ValidateDataService();
 
 //Configuración de sockets
 export default io => {

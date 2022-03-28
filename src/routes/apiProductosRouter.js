@@ -4,23 +4,41 @@ import {
   validatePostProductBody,
   validatePutProductBody
 } from "../middlewares/validateApiData.js";
-import * as controller from "../controllers/apiProductosController.js";
+import ApiProductosController from "../controllers/apiProductosController.js";
 
 const router = Router();
 
-router.get("/", controller.getAllProducts);
+class ApiProductosRouter {
+  constructor() {
+    this.apiProductosController = new ApiProductosController();
+  }
 
-router.post("/", validatePostProductBody, controller.createProduct);
+  start() {
+    router.get("/", this.apiProductosController.getAllProducts);
 
-router.get("/:id", validateId, controller.getProduct);
+    router.post(
+      "/",
+      validatePostProductBody,
+      this.apiProductosController.createProduct
+    );
 
-router.put(
-  "/:id",
-  validateId,
-  validatePutProductBody,
-  controller.updateProduct
-);
+    router.get("/:id", validateId, this.apiProductosController.getProduct);
 
-router.delete("/:id", validateId, controller.deleteProduct);
+    router.put(
+      "/:id",
+      validateId,
+      validatePutProductBody,
+      this.apiProductosController.updateProduct
+    );
 
-export default router;
+    router.delete(
+      "/:id",
+      validateId,
+      this.apiProductosController.deleteProduct
+    );
+
+    return router;
+  }
+}
+
+export default new ApiProductosRouter();

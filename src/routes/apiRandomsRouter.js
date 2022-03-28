@@ -1,8 +1,17 @@
 import { Router } from "express";
-import * as controller from "../controllers/apiRandomsController.js";
+import ApiRandomsController from "../controllers/apiRandomsController.js";
 
 const router = Router();
 
-router.get("/", controller.getRandoms);
+class ApiRandomsRouter {
+  constructor() {
+    this.randomsController = new ApiRandomsController();
+  }
 
-export default router;
+  start() {
+    router.get("/", this.randomsController.getRandoms);
+    return router;
+  }
+}
+
+export default new ApiRandomsRouter();
