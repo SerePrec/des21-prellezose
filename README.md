@@ -22,10 +22,6 @@ No hace falta realizar un cliente ya que utilizaremos tests para verificar el co
 
 - Escribir una suite de test para verificar si las respuestas a la lectura, incorporación, modificación y borrado de productos son las apropiadas. Generar un reporte con los resultados obtenidos de la salida del test.
 
-### Deploy en Heroku (Temporal):
-
-https://des20-prellezose.herokuapp.com/
-
 ### Ejecución
 
 Luego de clonar o descargar el repositorio e instalar todas las dependencias con `npm install`, existen dos comandos para levantar el proyecto.
@@ -95,4 +91,46 @@ Consiste en las siguientes rutas:
 | ------ | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | GET    | **/api/randoms** | Devuelve una cantidad de números aleatorios en el rango del 1 al 1000 especificada por parámetros de consulta (query). Por ej: `/api/randoms?cant=20000`. Si dicho parámetro no se ingresa, calcula 100.000.000 de números. |
 
+### Tests
+
+Se puede ejecutar una suite de tests con **Mocha** de la **API de productos**.  
+Para ello, utilizar el comando `npm test`, con el servidor corriendo bajo un entorno de `test`,de lo contrario, los test arrojarán error de autenticación.  
+Un ejemplo desde linux para ejecutar los test con **MongoDB** como persistencia, sería:
+
+Ejecución del servidor
+
+```sh
+$ NODE_ENV=test PERS=mongodb npm start
+```
+
+Ejecución del test
+
+```sh
+$ npm test
+```
+
+A modo de prueba y comparación, se hizo un test funcional manual que se puede ejecutar con el comando `npm run test-manual`, con la misma salvedad respecto al entorno de ejecución del servidor.
+
 ### Detalles y comentarios
+
+Contemplo un tercer entorno de ejecución `test` que hace algunos cambios en la lógica de autenticación de la app a fin de evitar el problema sobre las rutas de la API que requieren autenticación.  
+Básicamente, deshabilito el middleware de autenticación sobre la ruta de `api/productos` si `NODE_ENV=test` para aislar el tema del login del usuario en los tests, ya que no es su objetivo.
+
+A fin de generar datos de productos para el test utilicé el módulo de **faker** para construir una función generadora que se importa para los tests.
+
+En primer lugar, como pide el enunciado a fin de demostrar y comparar la potencia de realizar test con un framework de testeo, realicé una serie de tests manuales encadenados que se deben verificar con el estado en la base de datos junto a los resultados por consola (`manualHttpClientTest.js`). Este test utiliza el cliente htttp **AXIOS** para realizar las peticiones. Generé un modulo separado (`axiosHttpClient.js`) que exporta las funciones para realizar los diferentes tipos de peticiones, pasándole los respectivos argumentos.
+
+Finalmente realicé una serie de tests con el framework de testeo **Mocha** junto con **supertest** como cliente http y **chai** para escribir las aserciones.  
+Los tests se dividen en dos grupos principales:
+
+- Test a endpoints de la API de productos: Se prueba cada endpoint según los distintos tipos de respuestas en función del estado de la petición.
+- Test funcional de la API de productos: Se hace una simulación encadenada de peticiones, probando la funcionalidad en conjunto de la API. Es similar al recorrido que se hace en el test "manual".
+
+En los test se usan los hooks de **before** y **after** para preparar las condiciones previas a los bloque de pruebas y luego para realizar una limpieza de los datos residuales (Ej: productos creados en BD)
+
+Dentro de la carpeta `tests` se encuentra en un archivo .png donde se muestra una captura de pantalla de los resultados arrojados por consola.
+
+<br/>
+<div align="center">
+  <img src="src/tests/productsApiTest-result.png" alt="Resultados del test"/>
+</div>
