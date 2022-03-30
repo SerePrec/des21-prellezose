@@ -8,7 +8,7 @@ const argv = parseArgs(process.argv.slice(2), {
   default: { p: 8080, m: "FORK" }
 });
 
-const NODE_ENV = process.env.NODE_ENV;
+const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || "development";
 
 if (NODE_ENV !== "production") {
   const { config } = await import("dotenv");

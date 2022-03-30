@@ -23,7 +23,7 @@ class ApiProductosController {
       const data = req.body;
       const newProduct = await this.productsService.createProduct(data);
       logger.info("Producto creado con éxito");
-      res.json({ result: "ok", newProduct });
+      res.status(201).json({ result: "ok", newProduct });
     } catch (error) {
       logger.error(error);
       res.status(500).json({
@@ -37,7 +37,7 @@ class ApiProductosController {
       const producto = await this.productsService.getProduct(req.params.id);
       producto !== null
         ? res.json(producto)
-        : res.json({ error: "Producto no encontrado" });
+        : res.status(404).json({ error: "Producto no encontrado" });
     } catch (error) {
       logger.error(error);
       res.status(500).json({
@@ -56,7 +56,7 @@ class ApiProductosController {
         res.json({ result: "ok", updateProduct });
       } else {
         logger.warn("Producto no encontrado");
-        res.json({ error: "Producto no encontrado" });
+        res.status(404).json({ error: "Producto no encontrado" });
       }
     } catch (error) {
       logger.error(error);
@@ -74,7 +74,7 @@ class ApiProductosController {
         res.json({ result: "ok", deletedId });
       } else {
         logger.warn("Producto no encontrado");
-        res.json({ error: "Producto no encontrado" });
+        res.status(404).json({ error: "Producto no encontrado" });
       }
     } catch (error) {
       logger.error(error);

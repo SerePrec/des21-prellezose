@@ -57,7 +57,9 @@ app.use(authRouter.start());
 app.use(webServerRouter.start());
 app.use("/api", apiTestsRouter.start());
 app.use("/api/randoms", apiRandomsRouter.start());
-app.use("/api/productos", isAuthApi, apiProductosRouter.start());
+config.NODE_ENV === "test"
+  ? app.use("/api/productos", apiProductosRouter.start())
+  : app.use("/api/productos", isAuthApi, apiProductosRouter.start()); // Para los tests se quita la autenticación de esta ruta
 
 // error 404 API
 app.use("/api", error404Controller.getError404Api);
